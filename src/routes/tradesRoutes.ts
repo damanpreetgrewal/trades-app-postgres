@@ -3,6 +3,7 @@ import { body, check } from 'express-validator';
 
 import {
   getTrades,
+  getSingleTrade,
   postTrade,
   updateTrade,
   deleteTrade,
@@ -13,7 +14,7 @@ const router: Router = express.Router();
 
 router
   .route('/')
-  .get(getTrades)
+  .get(getTrades) 
   .post(
     [
       body('ticker')
@@ -59,6 +60,7 @@ router
 
 router
   .route('/:id')
+  .get(getSingleTrade)
   .put(
     [
       check('userId').custom(async (value, { req }) => {

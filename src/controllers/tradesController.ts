@@ -37,6 +37,38 @@ export const getTrades = asyncHandler(
   }
 );
 
+// @desc Get Single Trade
+// @route GET /api/trades/:id
+// @access Public
+export const getSingleTrade = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      let query = `SELECT t.*,u.name FROM Trades t inner join Users u on t.userid = u.id where t.id=$1`;
+      const response = await poolDB.query(query, [req.params.id]);
+      const trades = response.rows;
+      if (trades.length === 0) {
+        res.status(200).json({ message: 'No Trades found.' });
+      }
+      const transformedTrades = trades.map(trade => {
+        return {
+          id: trade.id,
+          ticker: trade.ticker,
+          amount: Number(trade.amount),
+          price: Number(trade.price),
+          executionType: trade.executiontype,
+          executionDate: formatDate(trade.executiondate),
+          userId: Number(trade.userid),
+          userName: trade.name,
+        };
+      });
+
+      res.status(200).json(transformedTrades);
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
+
 // @desc Post a trade
 // @route POST /api/trades
 // @access Public
