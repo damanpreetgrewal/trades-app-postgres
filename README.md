@@ -33,7 +33,8 @@ docker-compose down -v
 
 | Endpoint                 | HTTP Method |     Description     |
 | ------------------------ | :---------: | :-----------------: |
-| `/api/trades`            |    `GET`    |  `Get All Trades`   |
+| `/api/trades`            |   `GET`     |  `Get All Trades`   |
+| `/api/trades/:id`        |   `GET`     |  `Get single Trade` |
 | `/api/trades`            |   `POST`    |  `Post a new Trade` |
 | `/api/trades/:id`        |   `PUT`     | `Update a Trade`    |
 | `/api/trades/:id`        |   `DELETE`  | `Delete a Trade`    |
