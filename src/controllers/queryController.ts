@@ -26,37 +26,40 @@ export const getTradesSummary = asyncHandler(
       const reqBodyFields = Object.entries(req.body);
 
       const values = [];
-      for (let i = 0; i < reqBodyFields.length; i++) {
-        switch (reqBodyFields[i][0]) {
-          case 'userId':
-            i == reqBodyFields.length - 1
-              ? (query += `userid = $${i + 1} `)
-              : (query += `userid = $${i + 1} AND `);
-            values.push(reqBodyFields[i][1]);
-            break;
-          case 'executionType':
-            i == reqBodyFields.length - 1
-              ? (query += `executiontype = $${i + 1}`)
-              : (query += `executiontype = $${i + 1} AND `);
-            values.push(reqBodyFields[i][1]);
-            break;
-          case 'executionStartDate':
-            i == reqBodyFields.length - 1
-              ? (query += `executiondate >= $${i + 1}`)
-              : (query += `executiondate >= $${i + 1} AND `);
-            values.push(reqBodyFields[i][1]);
-            break;
-          case 'executionEndDate':
-            i == reqBodyFields.length - 1
-              ? (query += `executiondate <= $${i + 1}`)
-              : (query += `executiondate <= $${i + 1} AND `);
-            values.push(reqBodyFields[i][1]);
-            break;
-          case 'default':
-            break;
+      if (reqBodyFields.length === 0) {
+        query = `SELECT t.* FROM Trades t ORDER BY 1 ASC`;
+      } else {
+        for (let i = 0; i < reqBodyFields.length; i++) {
+          switch (reqBodyFields[i][0]) {
+            case 'userId':
+              i == reqBodyFields.length - 1
+                ? (query += `userid = $${i + 1} `)
+                : (query += `userid = $${i + 1} AND `);
+              values.push(reqBodyFields[i][1]);
+              break;
+            case 'executionType':
+              i == reqBodyFields.length - 1
+                ? (query += `executiontype = $${i + 1}`)
+                : (query += `executiontype = $${i + 1} AND `);
+              values.push(reqBodyFields[i][1]);
+              break;
+            case 'executionStartDate':
+              i == reqBodyFields.length - 1
+                ? (query += `executiondate >= $${i + 1}`)
+                : (query += `executiondate >= $${i + 1} AND `);
+              values.push(reqBodyFields[i][1]);
+              break;
+            case 'executionEndDate':
+              i == reqBodyFields.length - 1
+                ? (query += `executiondate <= $${i + 1}`)
+                : (query += `executiondate <= $${i + 1} AND `);
+              values.push(reqBodyFields[i][1]);
+              break;
+            case 'default':
+              break;
+          }
         }
       }
-
       const response = await poolDB.query(query, values);
       const trades = response.rows;
       if (trades.length === 0) {
