@@ -23,7 +23,7 @@ const formatDate_1 = require("../utils/formatDate");
 // @access Public
 exports.getTrades = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        let query = `SELECT t.*,u.name FROM Trades t inner join Users u on t.userid = u.id order by 1 desc`;
+        let query = `SELECT t.*,u.name FROM Trades t INNER JOIN Users u on t.userid = u.id ORDER BY 1 ASC`;
         const response = yield connection_1.poolDB.query(query);
         const trades = response.rows;
         if (trades.length === 0) {
@@ -52,11 +52,13 @@ exports.getTrades = (0, express_async_handler_1.default)((req, res, next) => __a
 // @access Public
 exports.getSingleTrade = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        let query = `SELECT t.*,u.name FROM Trades t inner join Users u on t.userid = u.id where t.id=$1`;
+        let query = `SELECT t.*,u.name FROM Trades t INNER JOIN Users u on t.userid = u.id WHERE t.id=$1`;
         const response = yield connection_1.poolDB.query(query, [req.params.id]);
         const trades = response.rows;
         if (trades.length === 0) {
-            res.status(200).json({ message: 'No Trades found.' });
+            res
+                .status(200)
+                .json({ message: `Trade with id: ${req.params.id} not found.` });
         }
         const transformedTrades = trades.map(trade => {
             return {
@@ -123,7 +125,7 @@ const updateTrade = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
             const error = new errorType_1.default(422, 'Validation failed, entered data is incorrect.', errors.array());
             throw error;
         }
-        let query = `SELECT t.*,u.name FROM Trades t inner join Users u on t.userid = u.id WHERE t.id = $1 order by 1 desc`;
+        let query = `SELECT t.*,u.name FROM Trades t INNER JOIN Users u on t.userid = u.id WHERE t.id = $1 ORDER BY 1 ASC`;
         const queryResponse = yield connection_1.poolDB.query(query, [req.params.id]);
         const trade = queryResponse.rows;
         if (trade.length === 0) {
@@ -142,13 +144,45 @@ const updateTrade = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         let updateQuery = 'UPDATE Trades SET ';
         const values = [];
         for (let i = 0; i < reqBodyFields.length; i++) {
-            if (i !== reqBodyFields.length - 1) {
-                updateQuery += `${reqBodyFields[i][0]} = $${i + 1},`;
-                values.push(reqBodyFields[i][1]);
-            }
-            else {
-                updateQuery += `${reqBodyFields[i][0]} = $${i + 1}`;
-                values.push(reqBodyFields[i][1]);
+            switch (reqBodyFields[i][0]) {
+                case 'ticker':
+                    i == reqBodyFields.length - 1
+                        ? (updateQuery += `ticker = $${i + 1} `)
+                        : (updateQuery += `ticker = $${i + 1}, `);
+                    values.push(reqBodyFields[i][1]);
+                    break;
+                case 'amount':
+                    i == reqBodyFields.length - 1
+                        ? (updateQuery += `amount = $${i + 1} `)
+                        : (updateQuery += `amount = $${i + 1}, `);
+                    values.push(reqBodyFields[i][1]);
+                    break;
+                case 'price':
+                    i == reqBodyFields.length - 1
+                        ? (updateQuery += `price = $${i + 1} `)
+                        : (updateQuery += `price = $${i + 1}, `);
+                    values.push(reqBodyFields[i][1]);
+                    break;
+                case 'executionType':
+                    i == reqBodyFields.length - 1
+                        ? (updateQuery += `executiontype = $${i + 1} `)
+                        : (updateQuery += `executionType = $${i + 1}, `);
+                    values.push(reqBodyFields[i][1]);
+                    break;
+                case 'executionDate':
+                    i == reqBodyFields.length - 1
+                        ? (updateQuery += `executiondate = $${i + 1} `)
+                        : (updateQuery += `executiondate = $${i + 1}, `);
+                    values.push(reqBodyFields[i][1]);
+                    break;
+                case 'userId':
+                    i == reqBodyFields.length - 1
+                        ? (updateQuery += `userid = $${i + 1} `)
+                        : (updateQuery += `userid = $${i + 1}, `);
+                    values.push(reqBodyFields[i][1]);
+                    break;
+                case 'default':
+                    break;
             }
         }
         updateQuery += ` WHERE id = $${values.length + 1} RETURNING *`;
@@ -182,7 +216,7 @@ const deleteTrade = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
             const error = new errorType_1.default(422, 'Validation failed, entered data is incorrect.', errors.array());
             throw error;
         }
-        let query = `SELECT t.*,u.name FROM Trades t inner join Users u on t.userid = u.id WHERE t.id = $1 order by 1 desc`;
+        let query = `SELECT t.*,u.name FROM Trades t INNER JOIN Users u on t.userid = u.id WHERE t.id = $1 ORDER BY 1 ASC`;
         const queryResponse = yield connection_1.poolDB.query(query, [req.params.id]);
         const trade = queryResponse.rows;
         if (trade.length === 0) {

@@ -41,11 +41,15 @@ export const getTradesSummary = asyncHandler(
             values.push(reqBodyFields[i][1]);
             break;
           case 'executionStartDate':
-            query += `executiondate >= $${i + 1} AND `;
+            i == reqBodyFields.length - 1
+              ? (query += `executiondate >= $${i + 1}`)
+              : (query += `executiondate >= $${i + 1} AND `);
             values.push(reqBodyFields[i][1]);
             break;
           case 'executionEndDate':
-            query += `executiondate <= $${i + 1} `;
+            i == reqBodyFields.length - 1
+              ? (query += `executiondate <= $${i + 1}`)
+              : (query += `executiondate <= $${i + 1} AND `);
             values.push(reqBodyFields[i][1]);
             break;
           case 'default':

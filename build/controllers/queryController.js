@@ -46,11 +46,15 @@ exports.getTradesSummary = (0, express_async_handler_1.default)((req, res, next)
                     values.push(reqBodyFields[i][1]);
                     break;
                 case 'executionStartDate':
-                    query += `executiondate >= $${i + 1} AND `;
+                    i == reqBodyFields.length - 1
+                        ? (query += `executiondate >= $${i + 1}`)
+                        : (query += `executiondate >= $${i + 1} AND `);
                     values.push(reqBodyFields[i][1]);
                     break;
                 case 'executionEndDate':
-                    query += `executiondate <= $${i + 1} `;
+                    i == reqBodyFields.length - 1
+                        ? (query += `executiondate <= $${i + 1}`)
+                        : (query += `executiondate <= $${i + 1} AND `);
                     values.push(reqBodyFields[i][1]);
                     break;
                 case 'default':

@@ -5,6 +5,7 @@ dotenv.config();
 
 import tradesRoutes from './routes/tradesRoutes';
 import queryRoutes from './routes/queryRoutes';
+import userRoutes from './routes/userRoutes';
 import errorHandler from './middleware/errorMiddleware';
 
 import { get404 } from './controllers/error';
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use('/api/trades', tradesRoutes);
 app.use('/api/query', queryRoutes);
+app.use('/api/users', userRoutes);
 
 app.get('/', (req: Request, res: Response, next: NextFunction) => {
   res.status(200).json({ message: 'API is running...' });

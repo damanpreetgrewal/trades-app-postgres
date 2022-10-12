@@ -9,6 +9,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const tradesRoutes_1 = __importDefault(require("./routes/tradesRoutes"));
 const queryRoutes_1 = __importDefault(require("./routes/queryRoutes"));
+const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
 const errorMiddleware_1 = __importDefault(require("./middleware/errorMiddleware"));
 const error_1 = require("./controllers/error");
 const app = (0, express_1.default)();
@@ -19,6 +20,7 @@ app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
 app.use('/api/trades', tradesRoutes_1.default);
 app.use('/api/query', queryRoutes_1.default);
+app.use('/api/users', userRoutes_1.default);
 app.get('/', (req, res, next) => {
     res.status(200).json({ message: 'API is running...' });
 });
