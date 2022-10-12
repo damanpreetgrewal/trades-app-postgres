@@ -6,7 +6,13 @@
   "scripts": {
     "start": "node ./build/app.js",
     "dev": "nodemon -L ./src/app.ts",
-    "build": "tsc -p ."
+    "build": "tsc -p .",
+    "docker:up": "docker-compose up --build -d ",
+    "docker:down": "docker-compose down -v "
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/damanpreetgrewal/trades-app-postgres"
   },
   "author": "",
   "license": "ISC",

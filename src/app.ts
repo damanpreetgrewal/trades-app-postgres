@@ -22,7 +22,7 @@ app.use('/api/trades', tradesRoutes);
 app.use('/api/query', queryRoutes);
 
 app.get('/', (req: Request, res: Response, next: NextFunction) => {
-  res.send('API is running...');
+  res.status(200).json({ message: 'API is running...' });
 });
 
 app.use(get404);
