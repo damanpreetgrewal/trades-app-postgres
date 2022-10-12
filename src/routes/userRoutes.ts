@@ -1,8 +1,7 @@
 import express, { Router } from 'express';
-import { body, check } from 'express-validator';
+import { body } from 'express-validator';
 
 import { getUsers, postUser } from '../controllers/usersController';
-import { poolDB } from '../db/connection';
 
 const router: Router = express.Router();
 

@@ -5,8 +5,8 @@ import { poolDB } from '../db/connection';
 import CustomError from '../customTypes/errorType';
 import { formatDate } from '../utils/formatDate';
 
-// @desc Get all Trades
-// @route GET /api/trades
+// @desc Get Trades Summary
+// @route GET /api/query
 // @access Public
 export const getTradesSummary = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
