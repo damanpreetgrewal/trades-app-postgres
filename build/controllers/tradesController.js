@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteTrade = exports.updateTrade = exports.postTrade = exports.getTrades = void 0;
+exports.deleteTrade = exports.updateTrade = exports.postTrade = exports.getSingleTrade = exports.getTrades = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const express_validator_1 = require("express-validator");
 const connection_1 = require("../db/connection");
@@ -25,6 +25,35 @@ exports.getTrades = (0, express_async_handler_1.default)((req, res, next) => __a
     try {
         let query = `SELECT t.*,u.name FROM Trades t inner join Users u on t.userid = u.id order by 1 desc`;
         const response = yield connection_1.poolDB.query(query);
+        const trades = response.rows;
+        if (trades.length === 0) {
+            res.status(200).json({ message: 'No Trades found.' });
+        }
+        const transformedTrades = trades.map(trade => {
+            return {
+                id: trade.id,
+                ticker: trade.ticker,
+                amount: Number(trade.amount),
+                price: Number(trade.price),
+                executionType: trade.executiontype,
+                executionDate: (0, formatDate_1.formatDate)(trade.executiondate),
+                userId: Number(trade.userid),
+                userName: trade.name,
+            };
+        });
+        res.status(200).json(transformedTrades);
+    }
+    catch (err) {
+        return next(err);
+    }
+}));
+// @desc Get Single Trade
+// @route GET /api/trades/:id
+// @access Public
+exports.getSingleTrade = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let query = `SELECT t.*,u.name FROM Trades t inner join Users u on t.userid = u.id where t.id=$1`;
+        const response = yield connection_1.poolDB.query(query, [req.params.id]);
         const trades = response.rows;
         if (trades.length === 0) {
             res.status(200).json({ message: 'No Trades found.' });

@@ -59,6 +59,7 @@ router
 ], tradesController_1.postTrade);
 router
     .route('/:id')
+    .get(tradesController_1.getSingleTrade)
     .put([
     (0, express_validator_1.check)('userId').custom((value, { req }) => __awaiter(void 0, void 0, void 0, function* () {
         return yield connection_1.poolDB
@@ -69,6 +70,32 @@ router
             }
         });
     })),
+    (0, express_validator_1.body)('ticker')
+        .not()
+        .isEmpty()
+        .trim()
+        .withMessage('ticker symbol is required')
+        .matches(/^[A-Z]+$/)
+        .withMessage('ticker symbol must contain all uppercase letters'),
+    (0, express_validator_1.body)('amount')
+        .not()
+        .isEmpty()
+        .withMessage('Amount is required')
+        .matches(/^[0-9.]+$/)
+        .withMessage('Amount must be a postive Integer'),
+    (0, express_validator_1.body)('price')
+        .not()
+        .isEmpty()
+        .withMessage('Price is required')
+        .matches(/^[0-9.]+$/)
+        .withMessage('Price must be a postive Integer'),
+    (0, express_validator_1.check)('executionType')
+        .isIn(['buy', 'sell'])
+        .withMessage('Execution Type must be either buy or sell (case sensitive)'),
+    (0, express_validator_1.check)('executionDate')
+        .isISO8601()
+        .toDate()
+        .withMessage('Execution Date must be of format: YYYY-MM-DD HH:MM:SS'),
 ], tradesController_1.updateTrade)
     .delete([
     (0, express_validator_1.check)('userId').custom((value, { req }) => __awaiter(void 0, void 0, void 0, function* () {

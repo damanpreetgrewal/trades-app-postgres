@@ -20,7 +20,7 @@ app.use(express_1.default.urlencoded({ extended: false }));
 app.use('/api/trades', tradesRoutes_1.default);
 app.use('/api/query', queryRoutes_1.default);
 app.get('/', (req, res, next) => {
-    res.send('API is running...');
+    res.status(200).json({ message: 'API is running...' });
 });
 app.use(error_1.get404);
 app.use(errorMiddleware_1.default);

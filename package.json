@@ -7,7 +7,7 @@
     "start": "node ./build/app.js",
     "dev": "nodemon -L ./src/app.ts",
     "build": "tsc -p .",
-    "docker:up": "docker-compose up --build -d ",
+    "docker:up": "npm run build && docker-compose up --build -d ",
     "docker:down": "docker-compose down -v "
   },
   "repository": {
