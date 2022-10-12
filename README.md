@@ -38,21 +38,3 @@ docker-compose down -v
 | `/api/trades/:id`        |   `PUT`     | `Update a Trade`    |
 | `/api/trades/:id`        |   `DELETE`  | `Delete a Trade`    |
 | `/api/query     `        |   `POST`    | `Get Trade Summary` |
-
-## Test API locally using curl
-
-- #### Healthcheck
-
-`Request`
-
-```bash
-curl -i --request GET 'http://localhost:8000/'
-```
-
-`Response`
-
-```bash
-{
-  "message": "API is running..."
-}
-```
