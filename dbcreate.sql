@@ -3,7 +3,7 @@ DROP Table if exists Users;
 
 CREATE TABLE Users (
   ID SERIAL PRIMARY KEY,
-  name VARCHAR(30) 
+  name VARCHAR(255) 
 );
 
 INSERT INTO Users (name)
