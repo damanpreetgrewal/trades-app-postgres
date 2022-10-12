@@ -60,7 +60,8 @@ docker-compose down -v
 
 }
 
-## Update a Trade
+## Update a Trade - Need to check if the User ID of the user who created the trade is passed in the request body
+## Trades that have executionDate in the past cannot be updated 
 
 {
 
@@ -73,7 +74,8 @@ docker-compose down -v
 
 }
 
-## Delete a Trade
+## Delete a Trade - Need to check if the User ID of the user who created the trade is passed in the request body
+## Trades that have executionDate in the past cannot be deleted
 
 {
 
@@ -81,7 +83,7 @@ docker-compose down -v
 
 }
 
-## /api/query End Point - POST Request
+## /api/query End Point - POST Request - Get Trade Summary with optional Parameters in the Request Body
 
 {
 
