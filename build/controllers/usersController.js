@@ -14,7 +14,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.postUser = exports.getUsers = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
+const express_validator_1 = require("express-validator");
 const connection_1 = require("../db/connection");
+const errorType_1 = __importDefault(require("../customTypes/errorType"));
 // @desc Get All Users
 // @route GET /api/users
 // @access Public
@@ -37,6 +39,11 @@ exports.getUsers = (0, express_async_handler_1.default)((req, res, next) => __aw
 // @access Public
 exports.postUser = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const errors = (0, express_validator_1.validationResult)(req);
+        if (!errors.isEmpty()) {
+            const error = new errorType_1.default(422, 'Validation failed, entered data is incorrect.', errors.array());
+            throw error;
+        }
         const user = yield connection_1.poolDB.query('INSERT INTO Users(name) VALUES ($1) RETURNING *', [req.body.name]);
         res.status(201).json({
             message: 'User posted successfully.',

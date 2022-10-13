@@ -18,8 +18,8 @@ const express_validator_1 = require("express-validator");
 const connection_1 = require("../db/connection");
 const errorType_1 = __importDefault(require("../customTypes/errorType"));
 const formatDate_1 = require("../utils/formatDate");
-// @desc Get all Trades
-// @route GET /api/trades
+// @desc Get Trades Summary
+// @route GET /api/query
 // @access Public
 exports.getTradesSummary = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -31,34 +31,39 @@ exports.getTradesSummary = (0, express_async_handler_1.default)((req, res, next)
         let query = `SELECT t.* FROM Trades t WHERE `;
         const reqBodyFields = Object.entries(req.body);
         const values = [];
-        for (let i = 0; i < reqBodyFields.length; i++) {
-            switch (reqBodyFields[i][0]) {
-                case 'userId':
-                    i == reqBodyFields.length - 1
-                        ? (query += `userid = $${i + 1} `)
-                        : (query += `userid = $${i + 1} AND `);
-                    values.push(reqBodyFields[i][1]);
-                    break;
-                case 'executionType':
-                    i == reqBodyFields.length - 1
-                        ? (query += `executiontype = $${i + 1}`)
-                        : (query += `executiontype = $${i + 1} AND `);
-                    values.push(reqBodyFields[i][1]);
-                    break;
-                case 'executionStartDate':
-                    i == reqBodyFields.length - 1
-                        ? (query += `executiondate >= $${i + 1}`)
-                        : (query += `executiondate >= $${i + 1} AND `);
-                    values.push(reqBodyFields[i][1]);
-                    break;
-                case 'executionEndDate':
-                    i == reqBodyFields.length - 1
-                        ? (query += `executiondate <= $${i + 1}`)
-                        : (query += `executiondate <= $${i + 1} AND `);
-                    values.push(reqBodyFields[i][1]);
-                    break;
-                case 'default':
-                    break;
+        if (reqBodyFields.length === 0) {
+            query = `SELECT t.* FROM Trades t ORDER BY 1 ASC`;
+        }
+        else {
+            for (let i = 0; i < reqBodyFields.length; i++) {
+                switch (reqBodyFields[i][0]) {
+                    case 'userId':
+                        i == reqBodyFields.length - 1
+                            ? (query += `userid = $${i + 1} `)
+                            : (query += `userid = $${i + 1} AND `);
+                        values.push(reqBodyFields[i][1]);
+                        break;
+                    case 'executionType':
+                        i == reqBodyFields.length - 1
+                            ? (query += `executiontype = $${i + 1}`)
+                            : (query += `executiontype = $${i + 1} AND `);
+                        values.push(reqBodyFields[i][1]);
+                        break;
+                    case 'executionStartDate':
+                        i == reqBodyFields.length - 1
+                            ? (query += `executiondate >= $${i + 1}`)
+                            : (query += `executiondate >= $${i + 1} AND `);
+                        values.push(reqBodyFields[i][1]);
+                        break;
+                    case 'executionEndDate':
+                        i == reqBodyFields.length - 1
+                            ? (query += `executiondate <= $${i + 1}`)
+                            : (query += `executiondate <= $${i + 1} AND `);
+                        values.push(reqBodyFields[i][1]);
+                        break;
+                    case 'default':
+                        break;
+                }
             }
         }
         const response = yield connection_1.poolDB.query(query, values);

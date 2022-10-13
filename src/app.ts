@@ -3,6 +3,10 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 dotenv.config();
 
+import fs from 'fs';
+import path from 'path';
+import morgan from 'morgan';
+
 import tradesRoutes from './routes/tradesRoutes';
 import queryRoutes from './routes/queryRoutes';
 import userRoutes from './routes/userRoutes';
@@ -18,6 +22,12 @@ app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+const accessLogStream = fs.createWriteStream(
+  path.join(__dirname, 'logs', 'access.log'),
+  { flags: 'a' }
+);
+app.use(morgan('combined', { stream: accessLogStream }));
 
 app.use('/api/trades', tradesRoutes);
 app.use('/api/query', queryRoutes);
