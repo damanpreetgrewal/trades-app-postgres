@@ -16,13 +16,12 @@ DROP TYPE if exists executionType;
 
 CREATE TYPE executionType AS ENUM ('buy', 'sell');
 
-
 CREATE TABLE Trades(
 	id SERIAL NOT NULL PRIMARY KEY,
-	ticker VARCHAR(10) NOT NULL ,
+	ticker VARCHAR(10) NOT NULL,
 	amount DECIMAL NOT NULL,
 	price DECIMAL NOT NULL,
-  executionType executionType NOT NULL,
+	executionType executionType NOT NULL,
 	executionDate TIMESTAMP NOT NULL,
 	userId SERIAL NOT NULL,
 	CONSTRAINT fk_Trades_users FOREIGN KEY(userId) REFERENCES users(id) ON DELETE CASCADE

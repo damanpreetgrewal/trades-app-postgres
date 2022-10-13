@@ -3,7 +3,6 @@ import asyncHandler from 'express-async-handler';
 import { validationResult } from 'express-validator';
 import { poolDB } from '../db/connection';
 import CustomError from '../customTypes/errorType';
-import { formatDate } from '../utils/formatDate';
 
 // @desc Get All Users
 // @route GET /api/users
@@ -32,6 +31,15 @@ export const getUsers = asyncHandler(
 export const postUser = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        const error = new CustomError(
+          422,
+          'Validation failed, entered data is incorrect.',
+          errors.array() as []
+        );
+        throw error;
+      }
       const user = await poolDB.query(
         'INSERT INTO Users(name) VALUES ($1) RETURNING *',
         [req.body.name]
