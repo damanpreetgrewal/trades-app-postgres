@@ -18,23 +18,24 @@ import { get404 } from './controllers/error';
 const app: Application = express();
 const PORT: number = parseInt(process.env.PORT as string, 10);
 
-
 /**
  *  App Configuration
  */
 
 //Enable All CORS Requests
 app.use(cors());
+//Set Security HTTP Headers
+app.use(helmet());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-
-
+//Create a write stream (in append mode)
 const accessLogStream = fs.createWriteStream(
   path.join(__dirname, 'logs', 'access.log'),
   { flags: 'a' }
 );
+//Setup the logger
 app.use(morgan('combined', { stream: accessLogStream }));
 
 app.use('/api/trades', tradesRoutes);
@@ -48,8 +49,6 @@ app.get('/', (req: Request, res: Response, next: NextFunction) => {
 app.use(get404);
 
 app.use(errorHandler);
-
-
 
 /**
  * Server Activation
