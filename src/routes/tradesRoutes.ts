@@ -29,13 +29,13 @@ router
         .isEmpty()
         .withMessage('Amount is required')
         .matches(/^[0-9.]+$/)
-        .withMessage('Amount must be a postive Integer'),
+        .withMessage('Amount must be a positive Integer'),
       body('price')
         .not()
         .isEmpty()
         .withMessage('Price is required')
         .matches(/^[0-9.]+$/)
-        .withMessage('Price must be a postive Integer'),
+        .withMessage('Price must be a positive Integer'),
       check('executionType')
         .isIn(['buy', 'sell'])
         .withMessage(
